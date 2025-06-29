@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: Wishlist
+  data:
+    mongodb:
+      database: wishlist
+      username: root
+      password: root
