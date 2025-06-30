@@ -4,6 +4,7 @@ import com.guiodes.wishlist.application.port.WishListRepositoryGateway;
 import com.guiodes.wishlist.domain.model.WishListModel;
 import com.guiodes.wishlist.infra.mongo.document.WishListDocument;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -30,11 +31,17 @@ public class WishListRepository implements WishListRepositoryGateway {
 
     @Override
     public Optional<WishListModel> findByUserId(UUID userId) {
+        Query query = query(where("userId").is(userId));
+
         return Optional.ofNullable(
-            mongoTemplate.findOne(
-                query(where("userId").is(userId)),
-                WishListDocument.class
-            )
+                mongoTemplate.findOne(query, WishListDocument.class)
         ).map(WishListDocument::toModel);
+    }
+
+    @Override
+    public Boolean existsProductInWishList(UUID userId, UUID productId) {
+        Query query = query(where("userId").is(userId).and("productList").is(productId));
+
+        return mongoTemplate.exists(query, WishListDocument.class);
     }
 }

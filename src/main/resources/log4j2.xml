@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+
+    <!-- Define variáveis reutilizáveis -->
+    <Properties>
+        <Property name="LOG_PATTERN">%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n</Property>
+        <Property name="LOG_PATH">logs</Property>
+        <Property name="APP_LOG_FILE">${LOG_PATH}/application.log</Property>
+        <Property name="APP_LOG_ARCHIVE">${LOG_PATH}/archived/application-%d{yyyy-MM-dd}-%i.log.gz</Property>
+    </Properties>
+
+    <Appenders>
+
+        <!-- Console appender para desenvolvimento -->
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="${LOG_PATTERN}" />
+        </Console>
+
+        <!-- Arquivo com rotação diária e compressão -->
+        <RollingFile name="FileAppender"
+                     fileName="${APP_LOG_FILE}"
+                     filePattern="${APP_LOG_ARCHIVE}">
+            <PatternLayout pattern="${LOG_PATTERN}" />
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true" />
+                <SizeBasedTriggeringPolicy size="10 MB" />
+            </Policies>
+            <DefaultRolloverStrategy max="30" />
+        </RollingFile>
+
+    </Appenders>
+
+    <Loggers>
+
+        <!-- Logging específico da aplicação -->
+        <Logger name="com.guiodes" level="debug" additivity="false">
+            <AppenderRef ref="Console" />
+            <AppenderRef ref="FileAppender" />
+        </Logger>
+
+        <!-- Desabilita logs verbosos de frameworks -->
+        <Logger name="org.springframework" level="warn"/>
+        <Logger name="org.hibernate" level="warn"/>
+        <Logger name="org.mongodb.driver" level="warn"/>
+
+        <!-- Logger root para pegar o resto -->
+        <Root level="info">
+            <AppenderRef ref="Console" />
+            <AppenderRef ref="FileAppender" />
+        </Root>
+
+    </Loggers>
+</Configuration>

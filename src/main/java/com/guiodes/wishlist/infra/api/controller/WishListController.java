@@ -2,50 +2,70 @@ package com.guiodes.wishlist.infra.api.controller;
 
 import com.guiodes.wishlist.application.command.AddProductToWishlistCommand;
 import com.guiodes.wishlist.application.usecase.AddProductToWishlistUseCase;
-import com.guiodes.wishlist.domain.model.WishListModel;
+import com.guiodes.wishlist.application.usecase.DeleteWishListProductUseCase;
+import com.guiodes.wishlist.application.usecase.ExistsProductByWishListUseCase;
+import com.guiodes.wishlist.application.usecase.FindWishListUseCase;
 import com.guiodes.wishlist.infra.api.request.AddProductRequest;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.guiodes.wishlist.infra.api.response.ContainsProductInWishListResponse;
+import com.guiodes.wishlist.infra.api.response.WishListResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/wishlist")
 public class WishListController {
 
-    @Autowired
-    private AddProductToWishlistUseCase addProductToWishlistUseCase;
+    private final AddProductToWishlistUseCase addProductToWishlistUseCase;
+    private final FindWishListUseCase findWishListUseCase;
+    private final ExistsProductByWishListUseCase existsProductByWishListUseCase;
+    private final DeleteWishListProductUseCase deleteWishListProductUseCase;
+
+    public WishListController(
+            AddProductToWishlistUseCase addProductToWishlistUseCase,
+            FindWishListUseCase findWishListUseCase,
+            ExistsProductByWishListUseCase existsProductByWishListUseCase,
+            DeleteWishListProductUseCase deleteWishListProductUseCase
+    ) {
+        this.addProductToWishlistUseCase = addProductToWishlistUseCase;
+        this.findWishListUseCase = findWishListUseCase;
+        this.existsProductByWishListUseCase = existsProductByWishListUseCase;
+        this.deleteWishListProductUseCase = deleteWishListProductUseCase;
+    }
 
     @PostMapping
-    public ResponseEntity<WishListModel> addItemToWishList(@RequestBody AddProductRequest addProductRequest) {
+    public ResponseEntity<WishListResponse> addItemToWishList(@RequestBody AddProductRequest addProductRequest) {
         AddProductToWishlistCommand addProductToWishlistCommand = new AddProductToWishlistCommand(
                 addProductRequest.userId(),
                 addProductRequest.productId()
         );
 
-        WishListModel wishList =  addProductToWishlistUseCase.execute(addProductToWishlistCommand);
+        WishListResponse response = new WishListResponse(addProductToWishlistUseCase.execute(addProductToWishlistCommand));
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(wishList);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @GetMapping("/{userId}")
-    public String getWishListByUserId(@PathVariable String userId) {
-        return "Wishlist for user: " + userId;
+    public ResponseEntity<WishListResponse> findWishListByUserId(@PathVariable UUID userId) {
+        return ResponseEntity.ok(new WishListResponse(findWishListUseCase.execute(userId)));
     }
 
-    @GetMapping("/{userId}/all")
-    public String getAllWishLists(@PathVariable String userId) {
-        return "All wishlists retrieved successfully";
+    @GetMapping("/{userId}/product/{productId}/exists")
+    public ContainsProductInWishListResponse containsProductInWishList(
+            @PathVariable UUID userId,
+            @PathVariable UUID productId
+    ) {
+        return new ContainsProductInWishListResponse(existsProductByWishListUseCase.execute(userId, productId));
     }
 
-    @GetMapping("/{userId}/contains/{productId}")
-    public String checkIfWishListContainsProduct(@PathVariable String userId, @PathVariable String productId) {
-        return "Wishlist for user: " + userId + " contains product: " + productId;
-    }
-
-    @DeleteMapping("/remove")
+    @DeleteMapping("/{userId}/product/{productId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public String removeItemFromWishList(@RequestParam String userId, @RequestParam String productId) {
-        return "Item with ID: " + productId + " removed from wishlist for user: " + userId;
+    public void removeItemFromWishList(
+            @PathVariable UUID productId,
+            @PathVariable UUID userId
+    ) {
+        deleteWishListProductUseCase.execute(userId, productId);
     }
 }

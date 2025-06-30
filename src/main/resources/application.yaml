@@ -6,3 +6,5 @@ spring:
       database: wishlist
       username: root
       password: root
+      authentication-database: admin
+

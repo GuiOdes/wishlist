@@ -8,4 +8,5 @@ import java.util.UUID;
 public interface WishListRepositoryGateway {
     WishListModel saveWishList(WishListModel wishList);
     Optional<WishListModel> findByUserId(UUID userId);
+    Boolean existsProductInWishList(UUID userId, UUID productId);
 }

@@ -19,12 +19,19 @@ public class AddProductToWishlistUseCase {
     }
 
     private WishListModel addProductToExistingWishList(WishListModel wishList, AddProductToWishlistCommand command) {
-        wishList.productList().add(command.productId());
+
+        if (wishList.productList().contains(command.productId())) {
+            return wishList;
+        }
+
+        wishList.addProduct(command.productId());
+
         return wishListRepositoryGateway.saveWishList(wishList);
     }
 
     private WishListModel createNewWishList(AddProductToWishlistCommand command) {
         WishListModel newWishList = new WishListModel(command.userId());
+
         newWishList.productList().add(command.productId());
 
         return wishListRepositoryGateway.saveWishList(newWishList);

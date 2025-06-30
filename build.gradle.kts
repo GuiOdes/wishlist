@@ -23,6 +23,7 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
 	implementation("org.springframework.boot:spring-boot-starter-validation")
 	implementation("org.springframework.boot:spring-boot-starter-web")
+	implementation("org.springframework.boot:spring-boot-starter-log4j2")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.springframework.boot:spring-boot-testcontainers")
 	testImplementation("org.testcontainers:junit-jupiter")
@@ -37,3 +38,12 @@ dependencies {
 tasks.withType<Test> {
 	useJUnitPlatform()
 }
+
+configurations {
+	all {
+		exclude(group = "org.springframework.boot", module = "spring-boot-starter-logging")
+		exclude(group = "ch.qos.logback", module = "logback-classic")
+		exclude(group = "ch.qos.logback", module = "logback-core")
+	}
+}
+
