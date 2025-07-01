@@ -16,6 +16,6 @@ public class IntegrationTests {
 
     @BeforeEach
     void cleanDatabase() {
-        mongoTemplate.dropCollection("wishlist");
+        mongoTemplate.dropCollection("WishList");
     }
 }

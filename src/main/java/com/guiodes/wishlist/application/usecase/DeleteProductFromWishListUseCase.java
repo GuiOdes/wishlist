@@ -6,11 +6,11 @@ import com.guiodes.wishlist.domain.model.WishListModel;
 import java.util.Optional;
 import java.util.UUID;
 
-public class DeleteWishListProductUseCase {
+public class DeleteProductFromWishListUseCase {
 
     private final WishListRepositoryGateway wishListRepositoryGateway;
 
-    public DeleteWishListProductUseCase(WishListRepositoryGateway wishListRepositoryGateway) {
+    public DeleteProductFromWishListUseCase(WishListRepositoryGateway wishListRepositoryGateway) {
         this.wishListRepositoryGateway = wishListRepositoryGateway;
     }
 

@@ -1,7 +1,7 @@
 package com.guiodes.wishlist.infra.configs;
 
 import com.guiodes.wishlist.application.usecase.AddProductToWishlistUseCase;
-import com.guiodes.wishlist.application.usecase.DeleteWishListProductUseCase;
+import com.guiodes.wishlist.application.usecase.DeleteProductFromWishListUseCase;
 import com.guiodes.wishlist.application.usecase.ExistsProductByWishListUseCase;
 import com.guiodes.wishlist.application.usecase.FindWishListUseCase;
 import com.guiodes.wishlist.infra.mongo.repository.WishListRepository;
@@ -12,8 +12,11 @@ import org.springframework.context.annotation.Configuration;
 public class UseCaseConfiguration {
 
     @Bean
-    public AddProductToWishlistUseCase createWishListUseCase(WishListRepository wishListRepository) {
-        return new AddProductToWishlistUseCase(wishListRepository);
+    public AddProductToWishlistUseCase createWishListUseCase(
+        WishListRepository wishListRepository,
+        WishListItemsProperties wishListItemsProperties
+    ) {
+        return new AddProductToWishlistUseCase(wishListRepository, wishListItemsProperties);
     }
 
     @Bean
@@ -27,7 +30,7 @@ public class UseCaseConfiguration {
     }
 
     @Bean
-    public DeleteWishListProductUseCase deleteWishListProductUseCase(WishListRepository wishListRepository) {
-        return new DeleteWishListProductUseCase(wishListRepository);
+    public DeleteProductFromWishListUseCase deleteWishListProductUseCase(WishListRepository wishListRepository) {
+        return new DeleteProductFromWishListUseCase(wishListRepository);
     }
 }

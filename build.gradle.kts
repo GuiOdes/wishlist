@@ -25,16 +25,21 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-validation")
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.springframework.boot:spring-boot-starter-log4j2")
-	testImplementation("org.springframework.boot:spring-boot-starter-test")
+
+	testImplementation("org.springframework.boot:spring-boot-starter-test") {
+		exclude(group = "junit", module = "junit") // Remove JUnit 4
+	}
 	testImplementation("org.springframework.boot:spring-boot-testcontainers")
 	testImplementation("org.testcontainers:junit-jupiter")
 	testImplementation("org.testcontainers:mongodb")
-	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-	testImplementation("org.junit.platform:junit-platform-suite-api:1.13.2")
-	implementation("io.cucumber:cucumber-jvm:$cucumberVersion")
+
+	testImplementation("io.cucumber:cucumber-java:$cucumberVersion")
+	testImplementation("io.cucumber:cucumber-spring:$cucumberVersion")
 	testImplementation("io.cucumber:cucumber-junit-platform-engine:$cucumberVersion")
-	implementation("io.cucumber:cucumber-spring:$cucumberVersion")
-	implementation("io.cucumber:cucumber-java:$cucumberVersion")
+	testImplementation("org.junit.platform:junit-platform-suite-api:1.13.2")
+	testImplementation("org.junit.platform:junit-platform-suite:1.13.2")
+
+	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
 tasks.withType<Test> {
@@ -49,6 +54,11 @@ tasks.test {
 	finalizedBy(tasks.jacocoTestReport)
 }
 
+val jacocoClassesToExclude = listOf(
+	"**/handler/ControllerAdvice.*",
+	"**/WishlistApplication.*"
+)
+
 tasks.jacocoTestReport {
 	dependsOn(tasks.test)
 
@@ -57,6 +67,14 @@ tasks.jacocoTestReport {
 		csv.required = false
 		html.required = true
 	}
+
+	classDirectories.setFrom(
+		files(classDirectories.files.map {
+			fileTree(it) {
+				exclude(jacocoClassesToExclude)
+			}
+		})
+	)
 }
 
 configurations {
@@ -66,4 +84,3 @@ configurations {
 		exclude(group = "ch.qos.logback", module = "logback-core")
 	}
 }
-

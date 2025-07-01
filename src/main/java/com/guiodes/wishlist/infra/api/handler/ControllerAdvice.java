@@ -1,6 +1,7 @@
 package com.guiodes.wishlist.infra.api.handler;
 
 import com.guiodes.wishlist.domain.exception.DuplicatedProductException;
+import com.guiodes.wishlist.domain.exception.MaxSizeReachedException;
 import com.guiodes.wishlist.infra.api.response.ErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.logging.log4j.LogManager;
@@ -43,6 +44,26 @@ public class ControllerAdvice {
         logger.warn("Conflict error: {}", e.getMessage(), e);
 
         HttpStatus status = HttpStatus.CONFLICT;
+
+        ErrorResponse error = new ErrorResponse(
+                e.getMessage(),
+                status.value(),
+                request.getRequestURI()
+        );
+
+        return ResponseEntity
+                .status(status)
+                .body(error);
+    }
+
+    @ExceptionHandler(MaxSizeReachedException.class)
+    public ResponseEntity<ErrorResponse> handleMaxSizeReachedException(
+            MaxSizeReachedException e,
+            HttpServletRequest request
+    ) {
+        logger.warn("Max size reached error: {}", e.getMessage(), e);
+
+        HttpStatus status = HttpStatus.BAD_REQUEST;
 
         ErrorResponse error = new ErrorResponse(
                 e.getMessage(),

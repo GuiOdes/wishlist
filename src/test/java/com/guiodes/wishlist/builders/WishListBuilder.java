@@ -10,7 +10,7 @@ import java.util.UUID;
 public class WishListBuilder {
     private UUID id;
     private UUID userId;
-    private List<UUID> productList;
+    private final List<UUID> productList;
 
     private WishListBuilder() {
         this.productList = new ArrayList<>();
@@ -18,11 +18,6 @@ public class WishListBuilder {
 
     public static WishListBuilder builder() {
         return new WishListBuilder();
-    }
-
-    public WishListBuilder withId(UUID id) {
-        this.id = id;
-        return this;
     }
 
     public WishListBuilder withUserId(UUID userId) {
@@ -62,10 +57,5 @@ public class WishListBuilder {
     public WishListDocument buildDocument() {
         applyDefaultValues();
         return new WishListDocument(id, userId, productList);
-    }
-
-    public WishListModel buildModel() {
-        applyDefaultValues();
-        return new WishListModel(id, userId, productList);
     }
 }

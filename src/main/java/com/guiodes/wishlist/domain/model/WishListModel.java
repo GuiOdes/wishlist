@@ -15,9 +15,7 @@ public record WishListModel(
     }
 
     public void addProduct(UUID productId) {
-        if (!this.productList.contains(productId)) {
-            this.productList.add(productId);
-        }
+        this.productList.add(productId);
     }
 
     public void removeProduct(UUID productId) {

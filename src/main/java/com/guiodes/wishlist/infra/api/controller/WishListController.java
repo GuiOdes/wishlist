@@ -2,7 +2,7 @@ package com.guiodes.wishlist.infra.api.controller;
 
 import com.guiodes.wishlist.application.command.AddProductToWishlistCommand;
 import com.guiodes.wishlist.application.usecase.AddProductToWishlistUseCase;
-import com.guiodes.wishlist.application.usecase.DeleteWishListProductUseCase;
+import com.guiodes.wishlist.application.usecase.DeleteProductFromWishListUseCase;
 import com.guiodes.wishlist.application.usecase.ExistsProductByWishListUseCase;
 import com.guiodes.wishlist.application.usecase.FindWishListUseCase;
 import com.guiodes.wishlist.infra.api.request.AddProductRequest;
@@ -21,18 +21,18 @@ public class WishListController {
     private final AddProductToWishlistUseCase addProductToWishlistUseCase;
     private final FindWishListUseCase findWishListUseCase;
     private final ExistsProductByWishListUseCase existsProductByWishListUseCase;
-    private final DeleteWishListProductUseCase deleteWishListProductUseCase;
+    private final DeleteProductFromWishListUseCase deleteProductFromWishListUseCase;
 
     public WishListController(
             AddProductToWishlistUseCase addProductToWishlistUseCase,
             FindWishListUseCase findWishListUseCase,
             ExistsProductByWishListUseCase existsProductByWishListUseCase,
-            DeleteWishListProductUseCase deleteWishListProductUseCase
+            DeleteProductFromWishListUseCase deleteProductFromWishListUseCase
     ) {
         this.addProductToWishlistUseCase = addProductToWishlistUseCase;
         this.findWishListUseCase = findWishListUseCase;
         this.existsProductByWishListUseCase = existsProductByWishListUseCase;
-        this.deleteWishListProductUseCase = deleteWishListProductUseCase;
+        this.deleteProductFromWishListUseCase = deleteProductFromWishListUseCase;
     }
 
     @PostMapping
@@ -66,6 +66,6 @@ public class WishListController {
             @PathVariable UUID productId,
             @PathVariable UUID userId
     ) {
-        deleteWishListProductUseCase.execute(userId, productId);
+        deleteProductFromWishListUseCase.execute(userId, productId);
     }
 }

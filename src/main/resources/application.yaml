@@ -8,3 +8,6 @@ spring:
       password: root
       authentication-database: admin
 
+wishlist:
+  items:
+    max-size: ${WISHLIST_ITEMS_MAX_SIZE:20}
