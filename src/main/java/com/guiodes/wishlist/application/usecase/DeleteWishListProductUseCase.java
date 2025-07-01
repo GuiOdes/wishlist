@@ -18,7 +18,7 @@ public class DeleteWishListProductUseCase {
         Optional<WishListModel> wishList = wishListRepositoryGateway.findByUserId(userId);
 
         wishList.ifPresent(wishListModel -> {
-            wishListModel.productList().remove(productId);
+            wishListModel.removeProduct(productId);
 
             wishListRepositoryGateway.saveWishList(wishListModel);
         });

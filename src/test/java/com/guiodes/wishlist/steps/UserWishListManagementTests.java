@@ -1,6 +1,6 @@
 package com.guiodes.wishlist.steps;
 
-import com.guiodes.wishlist.configs.TestcontainersConfiguration;
+import com.guiodes.wishlist.configs.IntegrationTests;
 import com.guiodes.wishlist.domain.model.WishListModel;
 import com.guiodes.wishlist.infra.api.request.AddProductRequest;
 import com.guiodes.wishlist.infra.mongo.document.WishListDocument;
@@ -18,7 +18,7 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @CucumberContextConfiguration
-public class UserWishListManagementTests extends TestcontainersConfiguration {
+public class UserWishListManagementTests extends IntegrationTests {
 
     private final UUID userId = UUID.randomUUID();
     private final UUID productId = UUID.randomUUID();

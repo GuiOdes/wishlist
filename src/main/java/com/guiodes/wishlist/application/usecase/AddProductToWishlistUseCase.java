@@ -2,6 +2,7 @@ package com.guiodes.wishlist.application.usecase;
 
 import com.guiodes.wishlist.application.command.AddProductToWishlistCommand;
 import com.guiodes.wishlist.application.port.WishListRepositoryGateway;
+import com.guiodes.wishlist.domain.exception.DuplicatedProductException;
 import com.guiodes.wishlist.domain.model.WishListModel;
 
 public class AddProductToWishlistUseCase {
@@ -21,7 +22,9 @@ public class AddProductToWishlistUseCase {
     private WishListModel addProductToExistingWishList(WishListModel wishList, AddProductToWishlistCommand command) {
 
         if (wishList.productList().contains(command.productId())) {
-            return wishList;
+            throw new DuplicatedProductException(
+                String.format("Product %s already exists in the user wishlist!", command.productId())
+            );
         }
 
         wishList.addProduct(command.productId());

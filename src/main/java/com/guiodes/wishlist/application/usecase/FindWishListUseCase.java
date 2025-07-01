@@ -3,7 +3,6 @@ package com.guiodes.wishlist.application.usecase;
 import com.guiodes.wishlist.application.port.WishListRepositoryGateway;
 import com.guiodes.wishlist.domain.model.WishListModel;
 
-import java.util.Optional;
 import java.util.UUID;
 
 public class FindWishListUseCase {

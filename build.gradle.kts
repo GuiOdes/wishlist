@@ -1,5 +1,6 @@
 plugins {
 	java
+	jacoco
 	id("org.springframework.boot") version "3.5.3"
 	id("io.spring.dependency-management") version "1.1.7"
 }
@@ -29,14 +30,33 @@ dependencies {
 	testImplementation("org.testcontainers:junit-jupiter")
 	testImplementation("org.testcontainers:mongodb")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+	testImplementation("org.junit.platform:junit-platform-suite-api:1.13.2")
 	implementation("io.cucumber:cucumber-jvm:$cucumberVersion")
-	testImplementation("io.cucumber:cucumber-junit:$cucumberVersion")
+	testImplementation("io.cucumber:cucumber-junit-platform-engine:$cucumberVersion")
 	implementation("io.cucumber:cucumber-spring:$cucumberVersion")
 	implementation("io.cucumber:cucumber-java:$cucumberVersion")
 }
 
 tasks.withType<Test> {
 	useJUnitPlatform()
+}
+
+jacoco {
+	toolVersion = "0.8.13"
+}
+
+tasks.test {
+	finalizedBy(tasks.jacocoTestReport)
+}
+
+tasks.jacocoTestReport {
+	dependsOn(tasks.test)
+
+	reports {
+		xml.required = false
+		csv.required = false
+		html.required = true
+	}
 }
 
 configurations {
