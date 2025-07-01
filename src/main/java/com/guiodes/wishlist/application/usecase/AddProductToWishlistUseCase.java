@@ -6,10 +6,12 @@ import com.guiodes.wishlist.domain.exception.DuplicatedProductException;
 import com.guiodes.wishlist.domain.exception.MaxSizeReachedException;
 import com.guiodes.wishlist.domain.model.WishListModel;
 import com.guiodes.wishlist.infra.configs.WishListItemsProperties;
-
-import java.util.Objects;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class AddProductToWishlistUseCase {
+
+    private final Logger logger = LogManager.getLogger(AddProductToWishlistUseCase.class);
 
     private final WishListRepositoryGateway wishListRepositoryGateway;
     private final WishListItemsProperties wishListItemsProperties;
@@ -29,6 +31,8 @@ public class AddProductToWishlistUseCase {
     }
 
     private WishListModel createNewWishList(AddProductToWishlistCommand command) {
+        logger.info("Creating new wish list for userId: {}", command.userId());
+
         WishListModel newWishList = new WishListModel(command.userId());
 
         newWishList.addProduct(command.productId());
@@ -37,8 +41,7 @@ public class AddProductToWishlistUseCase {
     }
 
     private WishListModel addProductToExistingWishList(WishListModel wishList, AddProductToWishlistCommand command) {
-
-        Objects.requireNonNull(command, "AddProductToWishlistCommand must not be null");
+        logger.info("Adding product to existing wish list for userId: {}", command.userId());
 
         validateCommand(wishList, command);
 
